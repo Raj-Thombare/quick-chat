@@ -9,7 +9,7 @@ const DashNav = async ({ name, image }: { name: string; image?: string }) => {
         <span>
           <MessageCircle />
         </span>
-        <p className='ml-2'>ChatGroups</p>
+        <p className='ml-2'>QuickChat</p>
       </h1>
       <div className='flex items-center space-x-2 md:space-x-6 text-gray-700'>
         <ProfileMenu name={name} image={image} />

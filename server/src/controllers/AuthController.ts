@@ -39,8 +39,8 @@ class AuthController {
 
             return res.json({
                 message: "Logged in successfully!",
-                data: {
-                    ...JWTPayload,
+                user: {
+                    ...user,
                     token: `Bearer ${token}`
                 }
             })
