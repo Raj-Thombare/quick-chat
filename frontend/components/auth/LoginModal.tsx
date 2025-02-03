@@ -23,7 +23,7 @@ const LoginModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Getting Start</Button>
+        <Button>Get Started</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

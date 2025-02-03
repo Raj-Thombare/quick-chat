@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import NextAuth, { Account, AuthOptions, ISODateString } from "next-auth"
 import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google"
 import { LOGIN_URL } from "@/lib/apiEndPoints";
+import { redirect } from "next/navigation";
 
 export interface CustomSession {
     user?: CustomUser;
@@ -24,9 +25,6 @@ export const authOptions: AuthOptions = {
     },
     callbacks: {
         async signIn({ user, account }: { user: CustomUser, account: Account | null }) {
-            console.log("The user data: ", user)
-            console.log("The account is ", account)
-
             try {
                 const payload = {
                     email: user.email,
@@ -37,21 +35,26 @@ export const authOptions: AuthOptions = {
                 }
 
                 const { data } = await axios.post(LOGIN_URL, payload);
-
-                user.id = data?.user?.id.toString();
+                user.id = data?.user?.id?.toString();
                 user.token = data?.user?.token;
-                user.provider = data?.user?.provider;
-                return true
+
+                return true;
 
             } catch (error) {
-                console.log(error)
-                return false;
+                if (error instanceof AxiosError) {
+                    return redirect(`/auth/error?message=${error.message}`);
+                }
+                return redirect(
+                    `/auth/error?message=Something went wrong.please try again!`
+                );
             }
         },
+
         async session({ session, token }: { session: CustomSession, user: CustomUser, token: JWT }) {
             session.user = token.user as CustomUser;
             return session
         },
+
         async jwt({ token, user, }) {
             if (user) {
                 token.user = user;

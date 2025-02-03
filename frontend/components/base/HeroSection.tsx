@@ -1,32 +1,27 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <section className='flex-1 flex flex-col items-center justify-center text-center p-12 bg-gradient-to-b from-gray-50 to-white'>
-      <h1 className='text-5xl font-extrabold text-gray-900 mb-4'>
-        Instant Chat Links for Seamless Conversations
-      </h1>
-      <p className='text-xl text-gray-600 mb-8'>
-        QuickChat makes it effortless to create secure chat links and start
-        conversations in seconds.
-      </p>
-      <Link href='/dashboard'>
-        <Button size='lg' className='animate-pulse'>
-          Start Chatting
-        </Button>
-      </Link>
-
-      <div className='mt-12 w-full max-w-5xl flex justify-center'>
-        <Image
-          width={300}
-          height={300}
-          src='/images/conversation.svg'
-          alt='Illustration'
-          className='w-full h-auto'
-        />
+    <section className='w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800'>
+      <div className='container px-4 md:px-6'>
+        <div className='flex flex-col items-center space-y-4 text-center'>
+          <div className='space-y-2'>
+            <h1 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none'>
+              Connect, Collaborate, Communicate
+            </h1>
+            <p className='mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400'>
+              Create or join groups, chat in real-time, and stay connected with
+              your team, friends, or community.
+            </p>
+          </div>
+          <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
+            <Button size='lg'>Create a Group</Button>
+            <Button size='lg' variant='outline'>
+              Join a Group
+            </Button>
+          </div>
+        </div>
       </div>
     </section>
   );
