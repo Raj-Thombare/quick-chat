@@ -44,7 +44,7 @@ export default function Navbar({ user }: { user?: CustomUser }) {
           user && (
             <ProfileMenu
               name={user?.name as string}
-              image={user?.image as string}
+              image={user?.image ?? undefined}
             />
           )
         ) : (

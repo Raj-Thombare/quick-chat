@@ -17,12 +17,12 @@ const page = async () => {
   const groups: ChatGroupType[] | [] = await fetchChatGroups(
     session?.user?.token as string
   );
-  console.log(groups);
+  
   return (
     <>
       <Navbar user={session?.user} />
       <div className='container mx-auto px-6'>
-        <div className='flex justify-end mt-10'>
+        <div className='flex justify-end my-10'>
           <CreateChat user={session?.user as CustomUser} />
         </div>
 
