@@ -6,3 +6,9 @@ export type ChatGroupType = {
     created_at: string
 }
 
+export type ChatGroupUserType = {
+    id: string;
+    name: string;
+    group_id: string;
+    created_at: string;
+}
