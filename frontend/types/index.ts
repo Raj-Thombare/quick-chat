@@ -12,3 +12,11 @@ export type ChatGroupUserType = {
     group_id: string;
     created_at: string;
 }
+
+export interface MessageType {
+    id: string;
+    name: string;
+    message: string;
+    created_at: string;
+    group_id: string;
+}

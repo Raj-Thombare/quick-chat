@@ -12,7 +12,7 @@ export default function ChatNav({
   user?: ChatGroupUserType;
 }) {
   return (
-    <header className='bg-white dark:bg-gray-800 shadow-md py-4 px-6'>
+    <header className='bg-white dark:bg-gray-800 shadow-md py-4 px-6 flex justify-between'>
       <div className='flex space-x-4 md:space-x-0 items-center'>
         <div className='md:hidden'>
           <MobileChatSidebar users={users} />
