@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { getSocket } from "@/lib/socket.config";
 import { v4 as uuidv4 } from "uuid";
 import { ChatGroupType, ChatGroupUserType, MessageType } from "@/types";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "../ui/button";
 
 export default function Chats({
   group,
@@ -56,8 +58,8 @@ export default function Chats({
   };
 
   return (
-    <div className='flex flex-col h-[94vh]  p-4'>
-      <div className='flex-1 overflow-y-auto flex flex-col-reverse'>
+    <div className='flex flex-col h-[94vh]'>
+      <div className='flex-1 overflow-y-auto flex flex-col-reverse p-4'>
         <div ref={messagesEndRef} />
         <div className='flex flex-col gap-2'>
           {messages?.map((message) => (
@@ -73,14 +75,21 @@ export default function Chats({
           ))}
         </div>
       </div>
-      <form onSubmit={handleSubmit} className='mt-2 flex items-center'>
-        <input
-          type='text'
-          placeholder='Type your message...'
-          value={message}
-          className='flex-1 p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500'
-          onChange={(e) => setMessage(e.target.value)}
-        />
+      <Separator orientation='horizontal' />
+
+      <form onSubmit={handleSubmit} className='px-4 py-3 flex items-center'>
+        <div className='flex space-x-2 justify-between w-full'>
+          <input
+            type='text'
+            placeholder='Type your message...'
+            value={message}
+            className='flex h-10 w-full p-2 border rounded-lg outline-none focus:ring-1 focus:ring-gray-300'
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button type='submit' className='h-10 px-4 py-2'>
+            Send
+          </Button>
+        </div>
       </form>
     </div>
   );
