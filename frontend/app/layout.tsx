@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
-  title: "QuickChat",
+  title: "Quick Chat",
   description: "To make chatting quick as possible without any login.",
 };
 

@@ -13,7 +13,7 @@ const app: Application = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.CLIENT_APP_URL,
     methods: ["GET", "POST"]
   },
   adapter: createAdapter(redis)

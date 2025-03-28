@@ -20,6 +20,13 @@ const LoginModal = () => {
       callbackUrl: "/dashboard",
     });
   };
+
+  const handleGithubLogin = () => {
+    signIn("github", {
+      redirect: true,
+      callbackUrl: "/dashboard",
+    });
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -42,6 +49,16 @@ const LoginModal = () => {
             alt='google_logo'
           />
           Continue with Google
+        </Button>
+        <Button variant='outline' onClick={handleGithubLogin}>
+          <Image
+            src={`/images/github.png`}
+            className='mr-4'
+            width={25}
+            height={25}
+            alt='github_logo'
+          />
+          Continue with Github
         </Button>
       </DialogContent>
     </Dialog>

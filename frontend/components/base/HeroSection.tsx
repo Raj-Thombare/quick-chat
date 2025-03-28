@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router = useRouter();
   return (
     <section className='w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800'>
       <div className='container px-4 md:px-6'>
@@ -16,8 +20,13 @@ export default function HeroSection() {
             </p>
           </div>
           <div className='flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4'>
-            <Button size='lg'>Create a Group</Button>
-            <Button size='lg' variant='outline'>
+            <Button size='lg' onClick={() => router.push("/dashboard")}>
+              Create a Group
+            </Button>
+            <Button
+              size='lg'
+              variant='outline'
+              onClick={() => router.push("/dashboard")}>
               Join a Group
             </Button>
           </div>

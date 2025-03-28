@@ -4,6 +4,8 @@ import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google"
 import { LOGIN_URL } from "@/lib/apiEndPoints";
 import { redirect } from "next/navigation";
+import GitHubProvider from "next-auth/providers/github";
+
 
 export interface CustomSession {
     user?: CustomUser;
@@ -64,8 +66,8 @@ export const authOptions: AuthOptions = {
     },
     providers: [
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
             authorization: {
                 params: {
                     prompt: "consent",
@@ -74,6 +76,17 @@ export const authOptions: AuthOptions = {
                 }
             }
         }),
+        GitHubProvider({
+            clientId: process.env.GITHUB_ID || "",
+            clientSecret: process.env.GITHUB_SECRET || "",
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            }
+        })
     ],
 }
 
