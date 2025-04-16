@@ -1,11 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Mouse } from "lucide-react";
 
 export default function HeroSection() {
   const router = useRouter();
+
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      console.log("hi");
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <section className='w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800'>
       <div className='container px-4 md:px-6'>
@@ -27,11 +47,19 @@ export default function HeroSection() {
               size='lg'
               variant='outline'
               onClick={() => router.push("/dashboard")}>
-              Join a Group
+              Join a Room
             </Button>
           </div>
         </div>
       </div>
+      {isVisible && (
+        <div className='absolute bottom-8 left-0 right-0 mx-auto w-fit transition-opacity duration-300'>
+          <div className='animate-bounce flex flex-col justify-center items-center'>
+            <Mouse size={30} />
+            <p className='text-sm'>Scroll Down</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
