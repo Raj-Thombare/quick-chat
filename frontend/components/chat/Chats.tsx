@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import { ChatGroupType, ChatGroupUserType, MessageType } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "../ui/button";
+import axios from "axios";
+import { CHATS_URL } from "@/lib/apiEndPoints";
 
 export default function Chats({
   group,
@@ -18,32 +20,62 @@ export default function Chats({
   const [messages, setMessages] = useState<Array<MessageType>>(oldMessages);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const socket = useMemo(() => {
     const socket = getSocket();
     socket.auth = {
       room: group.id,
     };
     return socket.connect();
-  }, []);
+  }, [group.id]);
 
   useEffect(() => {
-    socket.on("message", (data: MessageType) => {
-      console.log("The message is", data);
-      setMessages((prevMessages) => [...prevMessages, data]);
-      scrollToBottom();
-    });
+    const fetchMessages = async () => {
+      try {
+        const { data } = await axios.get(`${CHATS_URL}/${group.id}`);
+        setMessages(data.data);
+        localStorage.setItem(`chat_${group.id}`, JSON.stringify(data.data));
+      } catch (err) {
+        console.error("Error fetching messages", err);
+      }
+    };
+
+    fetchMessages();
+  }, [group.id]);
+
+  useEffect(() => {
+    const handleIncomingMessage = (newMessage: MessageType) => {
+      if (newMessage.name !== chatUser?.name) {
+        setMessages((prevMessages) => {
+          const messageExists = prevMessages.some(
+            (msg) => msg.id === newMessage.id
+          );
+          if (messageExists) return prevMessages;
+
+          const updatedMessages = [...prevMessages, newMessage];
+          localStorage.setItem(
+            `chat_${group.id}`,
+            JSON.stringify(updatedMessages)
+          );
+          return updatedMessages;
+        });
+      }
+    };
+
+    socket.on("message", handleIncomingMessage);
 
     return () => {
-      socket.close();
+      socket.off("message", handleIncomingMessage);
     };
-  }, []);
+  }, [socket, chatUser?.name, group.id]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (!message.trim()) return;
 
     const payload: MessageType = {
       id: uuidv4(),
@@ -54,8 +86,21 @@ export default function Chats({
     };
 
     socket.emit("message", payload);
+
+    const updatedMessages = [...messages, payload];
+    setMessages(updatedMessages);
     setMessage("");
-    setMessages([...messages, payload]);
+
+    localStorage.setItem(`chat_${group.id}`, JSON.stringify(updatedMessages));
+
+    try {
+      await axios.post(CHATS_URL, {
+        chats: [payload],
+        group_id: group.id,
+      });
+    } catch (error) {
+      console.error("Failed to save to DB", error);
+    }
   };
 
   return (
@@ -101,7 +146,10 @@ export default function Chats({
             className='flex h-10 w-full p-2 border rounded-lg outline-none focus:ring-1 focus:ring-gray-300'
             onChange={(e) => setMessage(e.target.value)}
           />
-          <Button type='submit' className='h-10 px-4 py-2'>
+          <Button
+            type='submit'
+            className='h-10 px-4 py-2'
+            disabled={!message.trim()}>
             Send
           </Button>
         </div>

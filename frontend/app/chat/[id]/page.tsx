@@ -11,7 +11,6 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (chatId.length !== 36) {
     return notFound();
   }
-
   const group: ChatGroupType | null = await fetchChatGroup(chatId);
 
   if (group === null) {
@@ -19,7 +18,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   const users: Array<ChatGroupUserType> | [] = await fetchChatUsers(chatId);
-
+  
   const chats: Array<MessageType> | [] = await fetchChats(chatId);
 
   return (

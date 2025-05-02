@@ -22,5 +22,6 @@ router.post('/chat-group-users', ChatGroupUserController.store);
 
 //Chat Messages 
 router.get('/chats/:groupId', ChatsController.index);
+router.post('/chats', ChatsController.store);
 
 export default router;
