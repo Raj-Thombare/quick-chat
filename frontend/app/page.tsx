@@ -14,7 +14,7 @@ export default function Home() {
   const { data: session } = useSession();
 
   return (
-    <div className='min-h-screen flex flex-col'>
+    <div className='min-h-screen flex flex-col items-center'>
       <Navbar user={session?.user} />
 
       <main className='flex-1'>
