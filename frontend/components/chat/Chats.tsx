@@ -20,13 +20,16 @@ export default function Chats({
   const [messages, setMessages] = useState<Array<MessageType>>(oldMessages);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const userId = chatUser?.id || chatUser?.name;
+
   const socket = useMemo(() => {
     const socket = getSocket();
     socket.auth = {
       room: group.id,
+      userId: userId,
     };
     return socket.connect();
-  }, [group.id]);
+  }, [group.id, userId]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -44,21 +47,19 @@ export default function Chats({
 
   useEffect(() => {
     const handleIncomingMessage = (newMessage: MessageType) => {
-      if (newMessage.name !== chatUser?.name) {
-        setMessages((prevMessages) => {
-          const messageExists = prevMessages.some(
-            (msg) => msg.id === newMessage.id
-          );
-          if (messageExists) return prevMessages;
+      setMessages((prevMessages) => {
+        const messageExists = prevMessages.some(
+          (msg) => msg.id === newMessage.id
+        );
+        if (messageExists) return prevMessages;
 
-          const updatedMessages = [...prevMessages, newMessage];
-          localStorage.setItem(
-            `chat_${group.id}`,
-            JSON.stringify(updatedMessages)
-          );
-          return updatedMessages;
-        });
-      }
+        const updatedMessages = [...prevMessages, newMessage];
+        localStorage.setItem(
+          `chat_${group.id}`,
+          JSON.stringify(updatedMessages)
+        );
+        return updatedMessages;
+      });
     };
 
     socket.on("message", handleIncomingMessage);
@@ -66,7 +67,7 @@ export default function Chats({
     return () => {
       socket.off("message", handleIncomingMessage);
     };
-  }, [socket, chatUser?.name, group.id]);
+  }, [socket, group.id]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -104,56 +105,58 @@ export default function Chats({
   };
 
   return (
-    <div className='flex flex-col h-[94vh]'>
-      <div className='flex-1 overflow-y-auto flex flex-col-reverse p-4'>
-        <div ref={messagesEndRef} />
-        <div className='flex flex-col gap-2 p-4'>
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex flex-col max-w-sm ${
-                message.name === chatUser?.name
-                  ? "self-end items-end"
-                  : "self-start items-start"
-              }`}>
-              <div className='text-xs text-gray-500 px-2 mb-1'>
-                {message.name} •{" "}
-                {new Date(message.created_at).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
+    <div className='flex h-[90vh]'>
+      <div className='flex flex-col h-full flex-1'>
+        <div className='flex-1 overflow-y-auto flex flex-col-reverse p-4'>
+          <div ref={messagesEndRef} />
+          <div className='flex flex-col gap-2 p-4'>
+            {messages.map((message) => (
               <div
-                className={`rounded-lg p-3 ${
+                key={message.id}
+                className={`flex flex-col max-w-sm ${
                   message.name === chatUser?.name
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-black"
+                    ? "self-end items-end"
+                    : "self-start items-start"
                 }`}>
-                {message.message}
+                <div className='text-xs text-gray-500 px-2 mb-1'>
+                  {message.name} •{" "}
+                  {new Date(message.created_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+                <div
+                  className={`rounded-lg p-3 ${
+                    message.name === chatUser?.name
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-black"
+                  }`}>
+                  {message.message}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-      <Separator orientation='horizontal' />
+        <Separator orientation='horizontal' />
 
-      <form onSubmit={handleSubmit} className='px-4 py-3 flex items-center'>
-        <div className='flex space-x-2 justify-between w-full'>
-          <input
-            type='text'
-            placeholder='Type your message...'
-            value={message}
-            className='flex h-10 w-full p-2 border rounded-lg outline-none focus:ring-1 focus:ring-gray-300'
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <Button
-            type='submit'
-            className='h-10 px-4 py-2'
-            disabled={!message.trim()}>
-            Send
-          </Button>
-        </div>
-      </form>
+        <form onSubmit={handleSubmit} className='px-4 py-3 flex items-center'>
+          <div className='flex space-x-2 justify-between w-full'>
+            <input
+              type='text'
+              placeholder='Type your message...'
+              value={message}
+              className='flex h-10 w-full p-2 border rounded-lg outline-none focus:ring-1 focus:ring-gray-300'
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <Button
+              type='submit'
+              className='h-10 px-4 py-2'
+              disabled={!message.trim()}>
+              Send
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

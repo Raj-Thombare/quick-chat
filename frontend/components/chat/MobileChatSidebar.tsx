@@ -22,7 +22,14 @@ export default function MobileChatSidebar({
       </SheetTrigger>
       <SheetContent side='left' className='bg-muted'>
         <SheetHeader>
-          <SheetTitle className='text-lg font-semibold mb-4'>Users</SheetTitle>
+          <SheetTitle className='text-lg font-semibold mb-4'>
+            <div className='flex flex-row items-center mb-4'>
+              <h2 className='text-lg font-semibold'>Users</h2>
+              <span className='text-white ml-4 font-medium text-sm rounded-xl px-2 py-1  bg-green-700'>
+                {users.length} online
+              </span>
+            </div>
+          </SheetTitle>
         </SheetHeader>
         <div className='max-w-full table'>
           {users.length > 0 &&
