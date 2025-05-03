@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { getSocket } from "@/lib/socket.config";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ChatGroupType, ChatGroupUserType, MessageType } from "@/types";
 import { Separator } from "@/components/ui/separator";
@@ -11,25 +10,17 @@ export default function Chats({
   group,
   oldMessages,
   chatUser,
+  socket,
 }: {
   group: ChatGroupType;
   oldMessages: Array<MessageType> | [];
   chatUser?: ChatGroupUserType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  socket?: any;
 }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Array<MessageType>>(oldMessages);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const userId = chatUser?.id || chatUser?.name;
-
-  const socket = useMemo(() => {
-    const socket = getSocket();
-    socket.auth = {
-      room: group.id,
-      userId: userId,
-    };
-    return socket.connect();
-  }, [group.id, userId]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -46,6 +37,8 @@ export default function Chats({
   }, [group.id]);
 
   useEffect(() => {
+    if (!socket) return;
+
     const handleIncomingMessage = (newMessage: MessageType) => {
       setMessages((prevMessages) => {
         const messageExists = prevMessages.some(
@@ -75,18 +68,19 @@ export default function Chats({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
     if (!message.trim()) return;
 
     const payload: MessageType = {
       id: uuidv4(),
-      message: message,
+      message,
       name: chatUser?.name ?? "Unknown",
       created_at: new Date().toISOString(),
       group_id: group.id,
     };
 
-    socket.emit("message", payload);
+    if (socket) {
+      socket.emit("message", payload);
+    }
 
     const updatedMessages = [...messages, payload];
     setMessages(updatedMessages);
