@@ -6,6 +6,7 @@ import { RainbowButton } from "../ui/rainbow-button";
 import { bricolage_grotesque, inter } from "@/lib/font";
 import { ChevronRight } from "lucide-react";
 import MarqueeComponent from "./MarqueeComponent";
+import { AnimatedListDemo } from "./AnimatedListComponent";
 
 export default function HeroSection() {
   const router = useRouter();
@@ -44,6 +45,11 @@ export default function HeroSection() {
       </section>
       <div className='mt-8'>
         <MarqueeComponent />
+      </div>
+      <div className='space-y-4 mt-32 max-sm:mt-20 pb-10 max-sm:pb-20'>
+        <h2
+          className={`text-center text-2xl md:text-5xl font-bold ${bricolage_grotesque}`}></h2>
+        <AnimatedListDemo />
       </div>
     </>
   );
