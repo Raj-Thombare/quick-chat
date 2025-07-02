@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import SessionProvider from "@/providers/SessionProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { GeistSans } from "geist/font/sans";
 
 export const metadata: Metadata = {
   title: "Quick Chat",
@@ -17,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <SessionProvider>
-        <body className={`${GeistSans.className} antialiased`}>
+        <body className={`antialiased`}>
           {children}
           <Toaster richColors duration={10000} />
         </body>

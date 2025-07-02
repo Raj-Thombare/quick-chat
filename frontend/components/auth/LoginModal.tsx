@@ -30,12 +30,14 @@ const LoginModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Get Started</Button>
+        <Button className='rounded-full px-10'>Login</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className='text-2xl'>Welcome to QuickChat</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className='text-3xl text-center'>
+            Welcome to QuickChat
+          </DialogTitle>
+          <DialogDescription className='text-center text-base'>
             QuickChat makes it effortless to create secure chat links and start
             conversations in seconds.
           </DialogDescription>
