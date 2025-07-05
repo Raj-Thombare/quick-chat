@@ -37,6 +37,10 @@ app.get("/", (req: Request, res: Response) => {
   return res.send("It's working 🙌");
 });
 
+app.get("/health", (req: Request, res: Response) => {
+  return res.status(200).json({ status: "OK" });
+});
+
 app.use("/api", Routes);
 
 const PORT = process.env.PORT || 7000;
