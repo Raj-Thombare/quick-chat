@@ -6,16 +6,24 @@ export default function ChatNav({
   chatGroup,
   users,
   user,
+  onlineUsers,
+  currentUserId,
 }: {
   chatGroup: ChatGroupType;
   users: Array<ChatGroupUserType> | [];
   user?: ChatGroupUserType;
+  onlineUsers: string[];
+  currentUserId?: string;
 }) {
   return (
     <header className='bg-white dark:bg-gray-800 shadow-md py-2 px-6 flex justify-between items-center'>
       <div className='flex space-x-4 md:space-x-0 items-center'>
         <div className='md:hidden'>
-          <MobileChatSidebar users={users} />
+          <MobileChatSidebar
+            users={users}
+            onlineUsers={onlineUsers}
+            currentUserId={currentUserId}
+          />
         </div>
 
         <div>

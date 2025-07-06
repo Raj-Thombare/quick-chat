@@ -146,7 +146,13 @@ const ChatBase = ({
             }}
           />
         ) : (
-          <ChatNav chatGroup={group} users={users} user={chatUser} />
+          <ChatNav
+            chatGroup={group}
+            users={users}
+            user={chatUser}
+            onlineUsers={onlineUsers}
+            currentUserId={chatUser?.id}
+          />
         )}
         <Chats
           group={group}

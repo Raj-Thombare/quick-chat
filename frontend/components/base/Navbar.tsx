@@ -8,7 +8,6 @@ import { MessageCircle } from "lucide-react";
 import { usePathname } from "next/navigation";
 import ProfileMenu from "../auth/ProfileMenu";
 import { bricolage_grotesque } from "@/lib/font";
-import { MoonIcon, SunIcon } from "lucide-react";
 
 export default function Navbar({ user }: { user?: CustomUser }) {
   const pathname = usePathname();
@@ -56,15 +55,10 @@ export default function Navbar({ user }: { user?: CustomUser }) {
           <div>
             {user ? (
               <Link href='/dashboard'>
-                <Button>Dashboard</Button>
+                <Button className='rounded-full px-10'>Dashboard</Button>
               </Link>
             ) : (
               <div className='flex items-center space-x-4'>
-                {false ? (
-                  <MoonIcon className='w-[20px] h-[20px] max-sm:w-[16px] max-sm:h-[16px]' />
-                ) : (
-                  <SunIcon className='w-5 h-5 max-sm:w-[16px] max-sm:h-[16px]' />
-                )}
                 <LoginModal />
               </div>
             )}

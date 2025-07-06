@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io"
+import { produceMessages } from "./helper.js";
 
 interface CustomSocket extends Socket {
     room?: string;
@@ -32,10 +33,10 @@ function handleUserDisconnection(roomId: string, userId: string): boolean {
         if (roomMap.size === 0) {
             roomUsers.delete(roomId);
         }
-        return true; 
+        return true;
     } else {
         roomMap.set(userId, count - 1);
-        return false; 
+        return false;
     }
 }
 
@@ -70,8 +71,6 @@ export const setupSocket = (io: Server) => {
             return;
         }
 
-        console.log(`User ${userId} connected to room ${room}`);
-
         socket.join(room);
 
         const isFirstConnection = handleUserConnection(room, userId);
@@ -82,13 +81,17 @@ export const setupSocket = (io: Server) => {
 
         io.to(room).emit("onlineUsers", getRoomUsers(room));
 
-        socket.on("message", (data) => {
-            console.log("Server side message: ", data);
+        socket.on("message", async (data) => {
+            try {
+                await produceMessages(process.env.KAFKA_TOPIC, data)
+            } catch (error) {
+                console.log("The kafka produce error is", error);
+            }
+
             socket.to(room).emit("message", data);
         });
 
         socket.on("disconnect", () => {
-            console.log(`User ${userId} disconnected from room ${room}`);
 
             if (userId && room) {
                 const isFullyDisconnected = handleUserDisconnection(room, userId);

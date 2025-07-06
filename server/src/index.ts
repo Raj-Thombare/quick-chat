@@ -8,6 +8,8 @@ import { setupSocket } from "./socket.js";
 import { createAdapter } from "@socket.io/redis-streams-adapter";
 import redis from "./config/redis.config.js";
 import { instrument } from "@socket.io/admin-ui";
+import { connectKafkaProducer } from "./config/kafka.config.js";
+import { consumeMessages } from "./helper.js";
 
 const app: Application = express();
 const server = createServer(app);
@@ -42,6 +44,10 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.use("/api", Routes);
+
+connectKafkaProducer().catch((err) => console.log('kafka producer error', err));
+
+consumeMessages(process.env.KAFKA_TOPIC).catch((err) => console.log('kafka consumer error', err))
 
 const PORT = process.env.PORT || 7000;
 

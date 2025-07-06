@@ -12,6 +12,9 @@ export default function ChatSidebar({
   onlineUsers,
   currentUserId,
 }: ChatSidebarProps) {
+
+  const sortedUsers = [...users].reverse();
+
   return (
     <div className='hidden md:block w-64 bg-gray-100 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 h-full overflow-y-auto'>
       <div className='p-4 sticky top-0 bg-gray-100 dark:bg-gray-900 z-10'>
@@ -24,7 +27,7 @@ export default function ChatSidebar({
       </div>
 
       <div className='px-4 pb-4 space-y-2'>
-        {users.map((user) => {
+        {sortedUsers.map((user) => {
           const isOnline = onlineUsers.includes(user.id);
           const isCurrentUser = user.id === currentUserId;
 
